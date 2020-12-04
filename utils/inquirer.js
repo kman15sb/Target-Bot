@@ -5,6 +5,7 @@ const chalk = require('chalk')
 const figlet = require('figlet');
 const { createTask } = require('./tasks');
 const editTask = require('./editTasks')
+const { genAccs } = require('./accGen.js')
 
 module.exports = {
     whatDo: async () => {
@@ -13,7 +14,7 @@ module.exports = {
             name: 'start',
             type: 'list',
             message: 'What do you want to do?',
-            choices: ['Start Tasks', 'Create Tasks', 'Edit Task Access Token']
+            choices: ['Start Tasks', 'Create Tasks', 'Edit Task Access Token', 'Generate Accounts']
             },
         ])
         .then(answers => {
@@ -28,8 +29,10 @@ module.exports = {
                 startTasks()
             } else if (answers.start == 'Create Tasks') {
                 createTask()
-            } else {
+            } else if (answers.start == 'Edit Task Access Token') {
                 editTask()
+            } else {
+                genAccs()
             }
         });
     }

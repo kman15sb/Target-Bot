@@ -1,5 +1,5 @@
-node_modules/
-settings/
+settings
 settings/config.json
 settings/tasks.csv
 settings/proxies
+node_modules

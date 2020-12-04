@@ -9,7 +9,7 @@ let proxyTypes = {
   }
   
   for (let type of Object.entries(proxyTypes)) {
-    let lines = require('fs').readFileSync(`./${type[1]}`, 'utf-8')
+    let lines = require('fs').readFileSync(`./settings/${type[1]}`, 'utf-8')
       .split('\n')
       .filter(Boolean)
   
