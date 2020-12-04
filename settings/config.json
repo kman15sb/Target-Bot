@@ -1,15 +1,4 @@
 {
   "cartDelay": "",
   "webhook": "",
-  "tasks": [
-    {
-      "cookies": "",
-      "prodId": "",
-      "cvv": "",
-      "instore": false,
-      "locationId": "",
-      "giftCard": false,
-      "giftCardId": ""
-    }
-  ]
 }
