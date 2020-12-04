@@ -36,7 +36,7 @@ class genAcc {
         const acc = this.email+':'+this.password+':'+this.firstName+':'+this.lastName
         signale.success('Generated acount')
         fs.appendFileSync('./settings/accounts', acc+'\n')
-        Run()
+        setTimeout({Run()}, 3000)
      };
 }
 
