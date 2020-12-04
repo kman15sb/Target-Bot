@@ -4,7 +4,6 @@ const generator = require('generate-password')
 const fs = require('fs')
 const inquirer = require('inquirer')
 const signale = require('signale');
-const Run = require('../index.js');
 
 class genAcc {
     constructor(catchAll){
@@ -19,7 +18,6 @@ class genAcc {
     }
     newAcc = async () => 
     {
-        const Run = require('../index.js')
         const browser = await puppeteer.launch({
             headless: true
         });
@@ -34,13 +32,14 @@ class genAcc {
         await page.click('#createAccount')
         await browser.close();
         const acc = this.email+':'+this.password+':'+this.firstName+':'+this.lastName
-        signale.success('Generated acount')
+        // signale.success('Generated acount')
         fs.appendFileSync('./settings/accounts', acc+'\n')
-        setTimeout({Run()}, 3000)
      };
 }
 
 const genAccs = async () => {
+    const Run = require('../index.js')
+
     inquirer.prompt([
         {
             name: 'catchAll',
@@ -58,7 +57,10 @@ const genAccs = async () => {
         for(let i = 0; i < answer.numAccs; i++){
            new genAcc(catchAll)
         }
+        Run()
     })
 }
+
+
 
 module.exports = { genAccs }
