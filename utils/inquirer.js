@@ -3,10 +3,10 @@ const { startTasks } = require('../classes/Target');
 const clear = require('clear');
 const chalk = require('chalk') 
 const figlet = require('figlet');
+const { createTask } = require('./tasks');
 
 module.exports = { whatDo: () => {
-    inquirer
-        .prompt([
+    inquirer.prompt([
             {
             name: 'start',
             type: 'list',
@@ -15,7 +15,7 @@ module.exports = { whatDo: () => {
             },
         ])
         .then(answers => {
-            if(answers = 'Start Tasks'){
+            if(answers.start == 'Start Tasks'){
                 clear()
                 console.log(
                     chalk.magenta(
@@ -25,7 +25,7 @@ module.exports = { whatDo: () => {
                 console.log(chalk.magenta('Starting Tasks'))
                 startTasks()
             } else {
-                console.log("not implemented")
+                createTask()
             }
         });
     }

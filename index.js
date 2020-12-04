@@ -1,8 +1,7 @@
 const chalk = require('chalk');
 const clear = require('clear');
 const figlet = require('figlet');
-const files = require('./utils/files');
-const inquirer  = require('./lib/inquirer');
+const inquirer  = require('./utils/inquirer.js');
 
 clear();
 
@@ -14,6 +13,6 @@ console.log(
 const run = async () => {
     const whatDo = await inquirer.whatDo();
     return whatDo
-  };
+};
   
-  run();
+run();

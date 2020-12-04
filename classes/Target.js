@@ -1,9 +1,10 @@
 const request = require('request-promise')
 const signale = require('signale')
 const { runInContext } = require('vm')
-const config = require('./config.json')
+const config = require('../settings/config.json')
 const player = require('node-wav-player')
 const ProxyManager = require('../utils/ProxyManager.js')
+const tasks = require('../settings/tasks.json')
 const proxy = ''
 
 signale.config({
@@ -292,14 +293,12 @@ class Target {
   }
 }
 
-//Hello @optifiy
-
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 module.exports = {
   startTasks: async () => {
-    const delay = config.cartDelay/config.tasks.length
-    for (const task of config.tasks) {
+    const delay = config.cartDelay/tasks.length
+    for (let task of tasks) {
       new Target(task);
       await sleep(delay)
     }
