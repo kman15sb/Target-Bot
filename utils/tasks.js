@@ -1,8 +1,8 @@
 const fs = require('fs')
 const inquirer = require('inquirer');
-const { start } = require('repl');
 
-module.exports = { createTask: async () => {
+const createTask = async () => {
+    const Run = require('../index.js')
     const accessToken = ''
     const productId = ''
     const cvv = ''
@@ -12,7 +12,7 @@ module.exports = { createTask: async () => {
     const giftCardId = ''
     inquirer.prompt([
         {
-            name: 'ProfileName',
+            name: 'profileName',
             type: 'input',
             message: 'Input Task Name'
         },
@@ -34,7 +34,7 @@ module.exports = { createTask: async () => {
         {
             name: 'instore',
             type: 'confirm',
-            message: 'Online or Instore Shipping?'
+            message: 'Pickup Instore'
         },
         {
             name: 'locationId',
@@ -49,10 +49,11 @@ module.exports = { createTask: async () => {
         {
             name: 'giftCardId',
             type: 'input',
-            message: 'Input Giftcard Id (if not using giftcard click enter'      
+            message: 'Input Giftcard Id (if not using giftcard click enter)'      
         }
     ]).then(answer => {
         let data = {
+            "name": answer.profileName,
             "cookies": answer.accessToken,
             "prodId": answer.productId,
             "cvv": answer.cvv,
@@ -64,8 +65,11 @@ module.exports = { createTask: async () => {
         const taskRaw = fs.readFileSync('./settings/tasks.json', 'utf-8')
         const tasks = JSON.parse(taskRaw)
         tasks.push(data)
-        console.log(tasks)
         fs.writeFileSync('./settings/tasks.json', JSON.stringify(tasks))
+        Run()
     })
-}}
+}
+
+module.exports = {createTask}
+
 

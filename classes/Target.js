@@ -56,10 +56,14 @@ class Target {
         this.cartWebhook()
       }).catch(e => {
         if (e && e.response && e.response.statusCode == 424) {
-          signale.error('Monitoring', this.task.prodId + ":", e.response.statusCode)
+          signale.error(this.task.name, 'Monitoring', this.task.prodId + ":", e.response.statusCode)
           setTimeout(() => {
             this.cart()
           }, config.cartDelay)
+        } else if (e && e.response && e.response.statusCode == 429) {
+          signale.error(e.response.statusCode, 'Rotating Proxy')
+          this.proxy = ProxyManager.randomProxy('dc')
+          this.cart()
         } else {
           signale.error('Error', e.response.statusCode)
           setTimeout(() => {
@@ -95,10 +99,15 @@ class Target {
         this.cartWebhook()
       }).catch(e => {
         if (e && e.response && e.response.statusCode == 424) {
-          signale.error('Monitoring', this.task.prodId + ":", e.response.statusCode)
+          signale.error(this.task.name,'Monitoring', this.task.prodId + ":", e.response.statusCode)
           setTimeout(() => {
             this.cart()
           }, config.cartDelay)
+        } else if (e && e.response && e.response.statusCode == 429) {
+          signale.error(e.response.statusCode, 'Rotating Proxy')
+          this.proxy = ProxyManager.randomProxy('dc')
+          console.log(this.proxy)
+          this.cart()
         } else {
           signale.error('Error', e.response.statusCode)
           setTimeout(() => {
