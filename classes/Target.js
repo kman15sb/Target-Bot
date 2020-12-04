@@ -3,7 +3,7 @@ const signale = require('signale')
 const { runInContext } = require('vm')
 const config = require('./config.json')
 const player = require('node-wav-player')
-const ProxyManager = require('./ProxyManager.js')
+const ProxyManager = require('../utils/ProxyManager.js')
 const proxy = ''
 
 signale.config({
