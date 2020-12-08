@@ -5,6 +5,7 @@ const clear = require('clear');
 const chalk = require('chalk') 
 const figlet = require('figlet');
 const puppeteer = require('puppeteer')
+const signale = require('signale')
 
 class addDetails {
     constructor(){
@@ -31,9 +32,9 @@ class addDetails {
         })
     }
     async getToken() {
-        console.log('Fetching Access Token')
+        signale.success('Fetching Access Token...')
         const browser = await puppeteer.launch({
-            headless: true
+            headless: false
         });
         const page = await browser.newPage()
         await page.goto('https://www.target.com/account/orders')
@@ -41,13 +42,12 @@ class addDetails {
         await page.type('#username', this.email)
         await page.type('#password', this.password)
         await page.click('#login')
+        await page.waitForNavigation({ waitUntil: 'networkidle0' })
         const cookies = await page.cookies()
         const accessTokenCookie = cookies.filter((cookie) => cookie.name == "accessToken");
         this.accessToken = accessTokenCookie[0].value; 
-        const loginSessionCookie = cookies.filter((cookie) => cookie.name == "login-session");
-        this.loginSession = loginSessionCookie[0].value; 
         await browser.close()
-        console.log(this.accessToken)
+        signale.success('Succesfully Got Access Token!')
         this.getDetails()
     }
     getDetails = async () => {
@@ -57,6 +57,7 @@ class addDetails {
                 figlet.textSync('KmanAIO', {horizontalLayout: 'full'})
             )
         )
+        console.log(this.accessToken)
         inquirer.prompt([
             {
                 name: 'firstName',
@@ -99,7 +100,7 @@ class addDetails {
                 message: 'Insert Zipcode'
             },
             {
-                name: 'phoneNumber',
+                name: 'phone',
                 type: 'number',
                 message: 'Insert Phone Number'
             },
@@ -139,19 +140,21 @@ class addDetails {
         })
     }
     async addDetail (answer) {
+        const Run = require('../index.js')
         request({ 
             method: 'POST',
             url: `https://profile.target.com/WalletWEB/wallet/v5/tenders?type=PC`,
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36',
-                'Cookie': `accessToken=${this.accessToken}`+'; '+`login-session=${this.loginSession}`
+                'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36',
+                'cookie': `accessToken=${this.accessToken};`,
+                'content-type': 'application/json'
             },
             gzip: true,
             json: true,
             body: {
                 "cardName": answer.cardName,
-                "expiryMonth": answer.expiryMonth,
-                "expiryYear": answer.expiryYear,
+                "expiryMonth": answer.expMonth,
+                "expiryYear": answer.expYear,
                 "defaultPayment": answer.defaultPayment,
                 "shiptCard": false,
                 "firstName": answer.firstName,
@@ -162,7 +165,7 @@ class addDetails {
                 "phone": answer.phone,
                 "state": answer.state,
                 "city": answer.city,
-                "zipCode": answer.zipCode,
+                "zipCode": answer.zipcode,
                 "addressType": "R",
                 "skipAddressValidation": true,
                 "cardNumber": answer.cardNumber,
@@ -170,6 +173,9 @@ class addDetails {
                 "cardSubType": answer.cardType
             },
             resolveWithFullResponse: true
+        }).then(() => {
+            signale.success('Details Added Successfuly')
+            Run()
         })
     }   
 }
