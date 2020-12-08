@@ -111,9 +111,9 @@ class addDetails {
             },
             {
                 name: 'cardType',
-                type: 'choice',
+                type: 'list',
                 message: 'Select Card Type',
-                choices: ['Visa', 'mastercard']
+                choices: ['Visa', 'MasterCard', 'American Express']
             },
             {
                 name: 'cardNumber',
@@ -123,7 +123,7 @@ class addDetails {
             {
                 name: 'expMonth',
                 type: 'number',
-                message: 'Insert Expiry Month (do not add 0 infront of number)'
+                message: 'Insert Expiry Month (Ex. May = 5, December = 12)'
             },
             {
                 name: 'expYear',
@@ -176,6 +176,10 @@ class addDetails {
         }).then(() => {
             signale.success('Details Added Successfuly')
             Run()
+        }).catch(e => {
+            if (e && e.response && e.response.statusCode != 201) {
+                signale.error('Error:',e.response.statusCode,'Please Retry')
+            }
         })
     }   
 }
