@@ -1,10 +1,14 @@
 const fs = require('fs')
 const request = require('request-promise')
 const inquirer = require('inquirer')
-const { getToken } = require('./getAccessToken')
+const clear = require('clear');
+const chalk = require('chalk') 
+const figlet = require('figlet');
+const puppeteer = require('puppeteer')
 
 class addDetails {
     constructor(){
+        this.accessToken = ''     
         this.getTokens()
     }
     getTokens = async () => {
@@ -18,13 +22,41 @@ class addDetails {
                 name: 'password',
                 type: 'password',
                 mask: '*',
-                message: 'Input Account Password'
+                message: 'Input Accout Password'
             }
         ]).then(answer => {
-            getToken(answer.email, answer.password)
+            this.email = answer.email
+            this.password = answer.password
+            this.getToken()
         })
     }
+    async getToken() {
+        console.log('Fetching Access Token')
+        const browser = await puppeteer.launch({
+            headless: true
+        });
+        const page = await browser.newPage()
+        await page.goto('https://www.target.com/account/orders')
+        await page.waitForSelector('#username')
+        await page.type('#username', this.email)
+        await page.type('#password', this.password)
+        await page.click('#login')
+        const cookies = await page.cookies()
+        const accessTokenCookie = cookies.filter((cookie) => cookie.name == "accessToken");
+        this.accessToken = accessTokenCookie[0].value; 
+        const loginSessionCookie = cookies.filter((cookie) => cookie.name == "login-session");
+        this.loginSession = loginSessionCookie[0].value; 
+        await browser.close()
+        console.log(this.accessToken)
+        this.getDetails()
+    }
     getDetails = async () => {
+        clear()
+        console.log(
+            chalk.magenta(
+                figlet.textSync('KmanAIO', {horizontalLayout: 'full'})
+            )
+        )
         inquirer.prompt([
             {
                 name: 'firstName',
@@ -106,14 +138,13 @@ class addDetails {
             this.addDetail(answer)
         })
     }
-    async addDetail () {
+    async addDetail (answer) {
         request({ 
             method: 'POST',
             url: `https://profile.target.com/WalletWEB/wallet/v5/tenders?type=PC`,
-            proxy,
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36',
-                'Cookie': cookies
+                'Cookie': `accessToken=${this.accessToken}`+'; '+`login-session=${this.loginSession}`
             },
             gzip: true,
             json: true,
