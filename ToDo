@@ -1,0 +1,5 @@
+- get token before starting task
+- or when editing task select account from acounts folder and it gets token from that
+- add error handling to addDetails.js
+- make .gitignore work :p
+-

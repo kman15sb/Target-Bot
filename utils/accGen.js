@@ -37,30 +37,28 @@ class genAcc {
      };
 }
 
-const genAccs = async () => {
-    const Run = require('../index.js')
+module.exports = { 
+    genAccs: async () => {
+        const Run = require('../index.js')
 
-    inquirer.prompt([
-        {
-            name: 'catchAll',
-            type: 'input',
-            message: 'Input Catchall (Do not include @)',
-        },
-        {
-            name: 'numAccs',
-            type: 'number',
-            message: 'How Many Accounts?'
-        }
-    ]).then(answer => {        
-        const catchAll = answer.catchAll
-        signale.info('Generating',answer.numAccs,'Accounts')
-        for(let i = 0; i < answer.numAccs; i++){
-           new genAcc(catchAll)
-        }
-        Run()
-    })
+        inquirer.prompt([
+            {
+                name: 'catchAll',
+                type: 'input',
+                message: 'Input Catchall (Do not include @)',
+            },
+            {
+                name: 'numAccs',
+                type: 'number',
+                message: 'How Many Accounts?'
+            }
+        ]).then(answer => {        
+            const catchAll = answer.catchAll
+            signale.info('Generating',answer.numAccs,'Accounts')
+            for(let i = 0; i < answer.numAccs; i++){
+               new genAcc(catchAll)
+            }
+            Run()
+        })
+    }
 }
-
-
-
-module.exports = { genAccs }

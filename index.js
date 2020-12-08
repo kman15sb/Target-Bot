@@ -17,4 +17,4 @@ const Run = async () => {
   
 Run();
 
-module.exports = Run
+module.exports = { Run }
