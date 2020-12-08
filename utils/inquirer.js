@@ -6,6 +6,7 @@ const figlet = require('figlet');
 const { createTask } = require('./tasks');
 const editTask = require('./editTasks')
 const { genAccs } = require('./accGen.js')
+const { addDetails } = require('./addDetails')
 
 module.exports = {
     whatDo: async () => {
@@ -14,7 +15,7 @@ module.exports = {
             name: 'start',
             type: 'list',
             message: 'What do you want to do?',
-            choices: ['Start Tasks', 'Create Tasks', 'Edit Task Access Token', 'Generate Accounts']
+            choices: ['Start Tasks', 'Create Tasks', 'Edit Task Access Token', 'Generate Accounts', 'Add Card/Address']
             },
         ])
         .then(answers => {
@@ -31,8 +32,10 @@ module.exports = {
                 createTask()
             } else if (answers.start == 'Edit Task Access Token') {
                 editTask()
-            } else {
+            } else if (answers.start == 'Generate Accounts'){
                 genAccs()
+            } else {
+                addDetails()
             }
         });
     }
