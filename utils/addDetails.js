@@ -4,8 +4,11 @@ const inquirer = require('inquirer')
 const clear = require('clear');
 const chalk = require('chalk') 
 const figlet = require('figlet');
-const puppeteer = require('puppeteer')
+const puppeteer = require('puppeteer-extra')
 const signale = require('signale')
+
+const StealthPlugin = require('puppeteer-extra-plugin-stealth')
+puppeteer.use(StealthPlugin())
 
 class addDetails {
     constructor(){
@@ -34,7 +37,7 @@ class addDetails {
     async getToken() {
         signale.success('Fetching Access Token...')
         const browser = await puppeteer.launch({
-            headless: false
+            headless: true
         });
         const page = await browser.newPage()
         await page.goto('https://www.target.com/account/orders')

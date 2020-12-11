@@ -1,9 +1,9 @@
 const fs = require('fs')
 const inquirer = require('inquirer');
 
+
 module.exports = { 
     createTask: async () => {
-        const Run = require('../index.js')
         inquirer.prompt([
             {
                 name: 'profileName',
@@ -11,9 +11,15 @@ module.exports = {
                 message: 'Input Task Name'
             },
             {
-                name: 'accessToken',
+                name: 'email',
                 type: 'input',
-                message: 'Input Access Token'      
+                message: 'Input Account Email'      
+            },
+            {
+                name: 'password',
+                type: 'input',
+                mask: '*',
+                message: 'Input Account Password'
             },
             {
                 name: 'productId',
@@ -46,9 +52,30 @@ module.exports = {
                 message: 'Input Giftcard Id (if not using giftcard click enter)'      
             }
         ]).then(answer => {
+            const { Run } = require('../index.js')
+            getToken = async (answer) => {
+                signale.success('Fetching Access Token...')
+                const browser = await puppeteer.launch({
+                    headless: true
+                });
+                const page = await browser.newPage()
+                await page.goto('https://www.target.com/account/orders')
+                await page.waitForSelector('#username')
+                await page.type('#username', answer.email)
+                await page.type('#password', answer.password)
+                await page.click('#login')
+                await page.waitForNavigation({ waitUntil: 'networkidle0' })
+                const cookies = await page.cookies()
+                const accessTokenCookie = cookies.filter((cookie) => cookie.name == "accessToken");
+                this.accessToken = accessTokenCookie[0].value; 
+                await browser.close()
+                signale.success('Succesfully Got Access Token!')
+                console.log(this.accessToken)
+                return this.accessToken
+            }
             let data = {
                 "name": answer.profileName,
-                "cookies": answer.accessToken,
+                "cookies": getToken(),
                 "prodId": answer.productId,
                 "cvv": answer.cvv,
                 "instore": answer.instore,

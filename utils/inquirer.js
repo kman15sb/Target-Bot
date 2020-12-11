@@ -4,7 +4,7 @@ const clear = require('clear');
 const chalk = require('chalk') 
 const figlet = require('figlet');
 const { createTask } = require('./tasks');
-const editTask = require('./editTasks')
+const { editTask }  = require('./editTasks')
 const { genAccs } = require('./accGen.js')
 const { addDetails } = require('./addDetails')
 
