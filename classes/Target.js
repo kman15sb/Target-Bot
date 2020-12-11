@@ -307,9 +307,13 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 module.exports = {
   startTasks: async () => {
     const delay = config.cartDelay/tasks.length
-    for (let task of tasks) {
-      new Target(task);
-      await sleep(delay)
+    if (tasks.length != 0) {
+      for (let task of tasks) {
+        new Target(task);
+        await sleep(delay)
+      }
+    } else {
+      signale.error('No Tasks Available')
     }
   }
 }
